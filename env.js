@@ -1,3 +1,1 @@
-window.env = {
-  "BH": "storerest.pythonanywhere.com"
-};
+window.env = {};
