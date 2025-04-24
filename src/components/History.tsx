@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import env from "react-dotenv";
 import Activity from "../auxfuncs/Activity.tsx";
 import { AddCommaToNum } from '../auxfuncs/Misc.tsx';
-import { Link } from "react-router";
+import { Link , useNavigate} from "react-router";
 
 const HistoryList = ({ param }) => {
     return (
@@ -63,6 +63,7 @@ const HistoryList = ({ param }) => {
 }
 const History = () => {
     const [HData, SetHD] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         (async function () {
@@ -80,12 +81,16 @@ const History = () => {
                 SetHD(results);
                 return
             }
+            else if(resp.status ===301)
+            {
+                navigate("/auth");
+            }
             else {
                 alert("An unexpected error has occured.");
             }
         })();
 
-    }, []);
+    }, [navigate]);
     return (
         <>
             <div className='Subhead'>

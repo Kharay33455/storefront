@@ -4,8 +4,8 @@ import env from 'react-dotenv';
 import { CompDataContext } from '../App.tsx';
 
 import Activity from '../auxfuncs/Activity.tsx';
-import {AddToCart} from "../auxfuncs/AddToCart.tsx";
-import {AddCommaToNum} from "../auxfuncs/Misc.tsx";
+import { AddToCart } from "../auxfuncs/AddToCart.tsx";
+import { AddCommaToNum } from "../auxfuncs/Misc.tsx";
 
 
 function ViewCatalouge() {
@@ -35,18 +35,14 @@ export const SingleProduct = ({ param }) => {
       <div key={index} className={render === 'CAT' ? "ProductCard CenterHorizontally" : "CenterHorizontally"}>
         <Link to={"/product/" + item['slug']} className="CatLinkBlack">
           <img src={env.REACT_APP_BH + item['picture1']} alt={item['name']} className={"SingleIndexProd" + render} />
-          <div className="NoTextOverflow">
-            <p style={{ wordBreak: 'keep-all', whiteSpace: 'nowrap' }}>
-              {item['name']}
-            </p>
-          </div>
         </Link>
+        <hr />
         {
           render === 'CAT' &&
           <>
             <div className="PriceAndCartCont">
-              <div className="CenterVertically">
-                <p className="centerText Price" >$ {AddCommaToNum(item['price'])}</p>
+              <div className="CenterVertically NoTextOverflow">
+                <p className="centerText Price" >$&nbsp;{AddCommaToNum(item['price'])}</p>
               </div>
 
               <div className="AddToCartWrapper CenterVertically CenterHorizontally" onClick={() => AddToCart(item['id'], SetCartCount, navigate, -99)}>
@@ -180,7 +176,7 @@ function App() {
       <hr />
       <LoadedData />
       <hr />
-      
+
     </div>
   );
 }

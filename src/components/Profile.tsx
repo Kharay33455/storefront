@@ -1,7 +1,7 @@
 import Activity from "../auxfuncs/Activity.tsx";
 import { useState, useEffect } from "react";
 import env from "react-dotenv";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 
 const OjectLoop = ({ param }) => {
@@ -76,6 +76,8 @@ const OrderDetails = ({ param }) => {
 const Profile = () => {
     const [profileData, SetPD] = useState(true);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         (async function () {
             let resp = await fetch(env.REACT_APP_BH + '/profile',
@@ -91,12 +93,16 @@ const Profile = () => {
                 console.log(results);
                 SetPD(results);
                 return;
-            } else {
+            }
+            else if(resp.status === 301){
+                navigate("/auth");
+            }
+             else {
                 alert("An unexpected error has occured.");
             }
 
         })();
-    }, []);
+    }, [navigate]);
 
     return (
         <>

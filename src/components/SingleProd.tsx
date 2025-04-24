@@ -6,6 +6,7 @@ import { ProductList } from "./Index.tsx";
 import {CompDataContext} from "../App.tsx";
 import {AddToCart} from "../auxfuncs/AddToCart.tsx";
 import {AddCommaToNum} from "../auxfuncs/Misc.tsx";
+import Activity from '../auxfuncs/Activity.tsx';
 
 export const ProdImages = ({ param }) => {
     const image1 = param["picture1"];
@@ -13,7 +14,7 @@ export const ProdImages = ({ param }) => {
 
     return (
         <>
-            <div>
+            <div style={{marginTop : '10vh'}}>
                 <div className="SideBySide">
                     <div>
                         <img src={env.REACT_APP_BH + image1} className="ProdImage" alt={image1} />
@@ -145,9 +146,7 @@ const SingleProd = () => {
             {isLoading ?
                 <>
                     <br /><br /><br /><br /><br /><br /><br />
-                    <h1>
-                        Hwllo
-                    </h1>
+                    <Activity/>
                 </>
                 :
                 <>

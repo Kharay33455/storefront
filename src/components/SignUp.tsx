@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "react-router";
 import env from "react-dotenv";
-import {useRef, useContext} from "react";
-import {CompDataContext} from "../App.tsx";
+import { useRef, useContext, useEffect, useState } from "react";
+import { CompDataContext } from "../App.tsx";
 
-const GetOtp = () => {
+const getOtp = (SetVerP) => {
+    SetVerP("Sending...");
     (async function () {
         const email = document.getElementById("exampleInputEmail1").value;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -24,13 +25,54 @@ const GetOtp = () => {
                         method: "POST",
                         headers: {
                             "X-CSRFToken": csrf,
-                            "Content-Type" : "application/json"
+                            "Content-Type": "application/json"
                         },
                         body: JSON.stringify({ "email": email })
                     }
+                    
                 );
                 if (resp.status === 200) {
-                    alert("Verification password sent");
+                    const results = await resp.json();
+                    const code = results['code'];
+                    const vars = {
+                        passcode: code,
+                        email: email
+                    }
+
+                    window.emailjs.send('service_ocw5r35', 'template_xk2l9re', vars).then(
+                        (response) => {
+                            if(response.status === 200)
+                            {
+                                alert("Your verification OTP has been sent to " + email);
+                            }
+                            else{
+                                alert("An unexpected error has occured. Try again later."); 
+                                SetVerP("Get Verification Code");
+                            }
+                        },
+                        (error) => {
+                            console.log('FAILED...', error);
+                        },
+                    );
+
+                    return;
+                }
+                else if(resp.status === 403){
+                    alert("A user with " + email +" already exists. Sign in instead.")
+                    SetVerP("Get Verification Code");
+                    return;
+                }
+                else if(resp.status === 400)
+                {
+                    let results = await resp.json();
+                    alert("You cannot request another verification code for " + results['time'] + " seconds.");
+                    SetVerP("Get Verification Code");
+                    return;
+                }
+                else{
+                    alert("An enexpected error has occured.");
+                    SetVerP("Get Verification Code");
+                    return;
                 }
 
             }
@@ -46,44 +88,72 @@ const SignUp = () => {
 
     const globalData = useContext(CompDataContext);
     const navigate = useNavigate();
+    const [ver, SetVer] = useState("Get Verification Code")
+
+    const emailScript = document.createElement('script');
 
     const SFormBox = useRef(null);
 
-    const SubmitForm = async (e) =>{
+    const SubmitForm = async (e) => {
         e.preventDefault();
         const cResp = await fetch(env.REACT_APP_BH + '/get-csrf');
-        if(cResp.status === 200)
-        {
+        if (cResp.status === 200) {
             const res = await cResp.json();
             const csrf = res['csrfToken'];
             const form = new FormData(SFormBox.current);
 
             const regResp = await fetch(env.REACT_APP_BH + '/register/', {
-                method:"POST",
-                headers : {
-                    "X-CSRFToken" : csrf
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": csrf
                 },
-                body : form
+                body: form
             });
             const regRes = await regResp.json();
 
-            if(regResp.status ===200)
-            {
+            if (regResp.status === 200) {
                 const sessionID = regRes['token'];
                 const date = new Date();
-                date.setTime(date.getTime() + 2500000000); 
-                const cookie = "name="+sessionID+"; expires="+date.toUTCString()+"; path=/";
+                date.setTime(date.getTime() + 2500000000);
+                const cookie = "name=" + sessionID + "; expires=" + date.toUTCString() + "; path=/";
                 document.cookie = cookie;
                 const SetUser = globalData['SetUser'];
                 SetUser(regRes['user']);
                 navigate("/");
                 window.location.reload();
             }
-            else{
+            else {
                 alert(regRes['err']);
             }
         }
     }
+
+
+    useEffect(() => {
+        try {
+            emailScript.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js";
+            emailScript.async = true;
+            emailScript.onload = () => {
+                if (window.emailjs) {
+                    window.emailjs.init("mX3uzinYKB0E6XdFJ");
+                    console.log("EmailJS initialized");
+                }
+                else {
+                    console.log("didnt intialize js");
+                }
+            }
+            document.body.appendChild(emailScript);
+        }
+        catch (error) {
+            console.log(error);
+        }
+
+        return () => {
+            document.body.removeChild(emailScript);
+            console.log('emailScript removed');
+        }
+
+    }, [emailScript]);
     return (
         <>
 
@@ -138,9 +208,9 @@ const SignUp = () => {
                                         required />
                                 </div>
 
-                                <div style={{ position: "absolute", bottom: "0", right: "0" }} onClick={GetOtp}>
+                                <div style={{ position: "absolute", bottom: "0", right: "0" }} onClick={()=> getOtp(SetVer)}>
                                     <span className="btn btn-info">
-                                        Get Verification Code
+                                        {ver}
                                     </span>
                                 </div>
                             </div>
