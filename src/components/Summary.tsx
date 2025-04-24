@@ -171,7 +171,7 @@ const Summary = () => {
 
     useEffect(() => {
         (async function () {
-            const resp = await fetch(env.BH + "/summary/" + params.orderID,
+            const resp = await fetch(env.REACT_APP_BH + "/summary/" + params.orderID,
                 {
                     method: "GET",
                     headers: {

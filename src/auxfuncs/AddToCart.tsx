@@ -7,7 +7,7 @@ export const AddToCart = (itemID, SetCartCount, navigate, update) => {
     (async function () {
         const csrf = await GetCSRF();
         if (csrf) {
-            const resp = await fetch(env.BH + '/add-to-cart/',
+            const resp = await fetch(env.REACT_APP_BH + '/add-to-cart/',
                 {
                     method: 'POST',
                     headers: {

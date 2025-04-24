@@ -51,11 +51,11 @@ const Table = ({ param }) => {
                             <div>
                                 <div style={{ display: 'flex' }}>
                                     <div>
-                                        <img src={env.BH + item['picture1']} className="SmallImg" alt={item['picture1']} />
+                                        <img src={env.REACT_APP_BH + item['picture1']} className="SmallImg" alt={item['picture1']} />
                                     </div>
 
                                     <div>
-                                        <img src={env.BH + item['picture2']} className="SmallImg" alt={item['picture2']} />
+                                        <img src={env.REACT_APP_BH + item['picture2']} className="SmallImg" alt={item['picture2']} />
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +100,7 @@ const Cart = () => {
         (async function () {
             try {
 
-                const resp = await fetch(env.BH + "/get-cart", {
+                const resp = await fetch(env.REACT_APP_BH + "/get-cart", {
                     method: "GET",
                     headers:
                     {

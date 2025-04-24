@@ -24,7 +24,7 @@ const SignIn = () => {
         if(isUserValid && isPasswordValid)
         {
             const form = new FormData(formBox.current);
-            const response = await fetch(env.BH + "/login/", 
+            const response = await fetch(env.REACT_APP_BH + "/login/", 
                 {
                     method : "POST",
                     headers : {
@@ -54,7 +54,7 @@ const SignIn = () => {
 
     useEffect(()=>{
         (async function(){
-            const resp = await fetch(env.BH+"/get-csrf");
+            const resp = await fetch(env.REACT_APP_BH+"/get-csrf");
             if(resp.status===200)
             {
                 const results = await resp.json();

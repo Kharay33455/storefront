@@ -14,12 +14,12 @@ const GetOtp = () => {
 
         try {
             // get csrf to send post form with
-            const csrfResp = await fetch(env.BH + "/get-csrf");
+            const csrfResp = await fetch(env.REACT_APP_BH + "/get-csrf");
             if (csrfResp.status === 200) {
                 const cResult = await csrfResp.json();
                 const csrf = cResult['csrfToken'];
 
-                const resp = await fetch(env.BH + "/get-otp",
+                const resp = await fetch(env.REACT_APP_BH + "/get-otp",
                     {
                         method: "POST",
                         headers: {
@@ -51,14 +51,14 @@ const SignUp = () => {
 
     const SubmitForm = async (e) =>{
         e.preventDefault();
-        const cResp = await fetch(env.BH + '/get-csrf');
+        const cResp = await fetch(env.REACT_APP_BH + '/get-csrf');
         if(cResp.status === 200)
         {
             const res = await cResp.json();
             const csrf = res['csrfToken'];
             const form = new FormData(SFormBox.current);
 
-            const regResp = await fetch(env.BH + '/register/', {
+            const regResp = await fetch(env.REACT_APP_BH + '/register/', {
                 method:"POST",
                 headers : {
                     "X-CSRFToken" : csrf

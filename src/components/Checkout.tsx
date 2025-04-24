@@ -13,7 +13,7 @@ const ProceedToPay = (checkout, navigate) =>{
         const _tfid = checkField.value;
 
         (async function(){
-            const resp = await fetch(env.BH + "/payment/" + _tfid, 
+            const resp = await fetch(env.REACT_APP_BH + "/payment/" + _tfid, 
                 {
                     method : "GET",
                     headers :{
@@ -113,7 +113,7 @@ const Shipping = ({ param }) => {
             const form = new FormData(param.newShipment.current);
 
             try {
-                const resp = await fetch(env.BH + '/create-shipping/create/',
+                const resp = await fetch(env.REACT_APP_BH + '/create-shipping/create/',
                     {
                         method: "POST",
                         headers: {
@@ -140,7 +140,7 @@ const Shipping = ({ param }) => {
 
     const DeleteShippingAddress = (_id) => {
         (async function () {
-            let resp = await fetch(env.BH + '/create-shipping/delete/',
+            let resp = await fetch(env.REACT_APP_BH + '/create-shipping/delete/',
                 {
                     method: "POST",
                     headers: {
@@ -328,7 +328,7 @@ const Checkout = () => {
 
             try {
 
-                const resp = await fetch(env.BH + '/checkout',
+                const resp = await fetch(env.REACT_APP_BH + '/checkout',
                     {
                         method: "GET",
                         headers: {

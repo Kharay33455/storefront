@@ -66,7 +66,7 @@ const History = () => {
 
     useEffect(() => {
         (async function () {
-            const resp = await fetch(env.BH + "/history",
+            const resp = await fetch(env.REACT_APP_BH + "/history",
                 {
                     method: "GET",
                     headers: {

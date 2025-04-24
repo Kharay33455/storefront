@@ -16,11 +16,11 @@ export const ProdImages = ({ param }) => {
             <div>
                 <div className="SideBySide">
                     <div>
-                        <img src={env.BH + image1} className="ProdImage" alt={image1} />
+                        <img src={env.REACT_APP_BH + image1} className="ProdImage" alt={image1} />
                     </div>
 
                     <div>
-                        <img src={env.BH + image2} className="ProdImage" alt={image2} />
+                        <img src={env.REACT_APP_BH + image2} className="ProdImage" alt={image2} />
                     </div>
                 </div>
             </div>
@@ -118,7 +118,7 @@ const SingleProd = () => {
 
     useEffect(() => {
         (async () => {
-            const response = await fetch(env.BH + "/product/" + params['prodSlug']);
+            const response = await fetch(env.REACT_APP_BH + "/product/" + params['prodSlug']);
             if (response.status === 200) {
                 const results = await response.json();
                 SetPD(results);
@@ -128,7 +128,7 @@ const SingleProd = () => {
         })();
 
         (async () => {
-            const response = await fetch(env.BH + "/more/" + params['prodSlug']);
+            const response = await fetch(env.REACT_APP_BH + "/more/" + params['prodSlug']);
             if (response.status === 200) {
                 const results = await response.json();
                 SetED(results);

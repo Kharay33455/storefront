@@ -34,7 +34,7 @@ export const SingleProduct = ({ param }) => {
     <>
       <div key={index} className={render === 'CAT' ? "ProductCard CenterHorizontally" : "CenterHorizontally"}>
         <Link to={"/product/" + item['slug']} className="CatLinkBlack">
-          <img src={env.BH + item['picture1']} alt={item['name']} className={"SingleIndexProd" + render} />
+          <img src={env.REACT_APP_BH + item['picture1']} alt={item['name']} className={"SingleIndexProd" + render} />
           <div className="NoTextOverflow">
             <p style={{ wordBreak: 'keep-all', whiteSpace: 'nowrap' }}>
               {item['name']}
@@ -99,7 +99,7 @@ const LoadedData = () => {
 
   const fetchData = async () => {
     const cookie = "Token " + document.cookie.split("=")[1];
-    const response = await fetch(env.BH,
+    const response = await fetch(env.REACT_APP_BH,
       {
         method: 'GET',
         headers: {

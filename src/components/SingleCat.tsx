@@ -10,7 +10,7 @@ const SingleCat = () => {
 
     useEffect(() => {
         const fetchCatData = async () => {
-            const response = await fetch(env.BH + "/categories/" + catSlug);
+            const response = await fetch(env.REACT_APP_BH + "/categories/" + catSlug);
             if (response.status === 200) {
                 const results = await response.json();
                 SetCatData(results);
@@ -25,7 +25,7 @@ const SingleCat = () => {
         <>
             { !loading &&
             <div className="HideX">
-                <div style={{backgroundImage:`url(${env.BH+catData['cat']['background']})`}} className="CatSlugWrapper CenterVertically" >
+                <div style={{backgroundImage:`url(${env.REACT_APP_BH+catData['cat']['background']})`}} className="CatSlugWrapper CenterVertically" >
                     <h1 style={{ textTransform: "capitalize" }}>
                         {catSlug}
                     </h1>

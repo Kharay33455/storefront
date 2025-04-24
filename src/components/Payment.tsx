@@ -19,7 +19,7 @@ const Status = ({param})=>{
 
 const ProcessPayment = (_SetHasPaid, _transID)=>{
     (async function(){
-        let resp = await fetch(env.BH + "/has-paid/" + _transID + '/',
+        let resp = await fetch(env.REACT_APP_BH + "/has-paid/" + _transID + '/',
             {
                 method: "POST",
                 headers: {
@@ -49,7 +49,7 @@ const Payment = () => {
 
     useEffect(() => {
         (async function () {
-            let resp = await fetch(env.BH + "/has-paid/" + params.transID + '/',
+            let resp = await fetch(env.REACT_APP_BH + "/has-paid/" + params.transID + '/',
                 {
                     method: "GET",
                     headers: {

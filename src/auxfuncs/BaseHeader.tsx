@@ -14,7 +14,7 @@ const BaseHeader = () => {
     const LogoutUser = () => {
             (async function(){
             const cookie =  "Token "+ document.cookie.split("=")[1];
-            const response = await fetch(env.BH + "/logout",
+            const response = await fetch(env.REACT_APP_BH + "/logout",
                 {
                     method:"GET",
                     headers : {

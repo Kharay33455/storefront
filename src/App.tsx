@@ -28,7 +28,7 @@ const App = () => {
 
   const fetchCompData = async () => {
     const cookie = "Token "+ document.cookie.split("=")[1];
-    const result = await fetch(env.BH + "/get-global-context",
+    const result = await fetch(env.REACT_APP_BH + "/get-global-context",
       {
         method:"GET",
         headers:{

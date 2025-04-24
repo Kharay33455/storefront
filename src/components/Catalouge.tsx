@@ -24,7 +24,7 @@ const BodyGrid = ({ param }) => {
                     <div key={index} className="CenterHorizontally">
 
                         <div className="card" style={{width: "18rem"}}>
-                            <img className="card-img-top" src={env.BH+item['background']} alt={item['background']} style={{width: "100%"}}/>
+                            <img className="card-img-top" src={env.REACT_APP_BH+item['background']} alt={item['background']} style={{width: "100%"}}/>
                                 <div className="card-body">
                                     <h5 className="card-title">{item['name1']} {item['name2']}</h5>
                                     <p className="card-text">{item['slug']}.</p>
@@ -44,7 +44,7 @@ const Catalouge = () => {
     const [catData, SetCatData] = useState(null);
 
     const BodyData = async () => {
-        const response = await fetch(env.BH + "/categories");
+        const response = await fetch(env.REACT_APP_BH + "/categories");
         if (response.status === 200) {
             const results = await response.json();
             SetCatData(results);

@@ -78,7 +78,7 @@ const Profile = () => {
 
     useEffect(() => {
         (async function () {
-            let resp = await fetch(env.BH + '/profile',
+            let resp = await fetch(env.REACT_APP_BH + '/profile',
                 {
                     method: "GET",
                     headers: {

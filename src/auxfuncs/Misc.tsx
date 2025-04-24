@@ -1,7 +1,7 @@
 import env from 'react-dotenv';
 
 export const GetCSRF = async () =>{
-    const resp = await fetch(env.BH + '/get-csrf');
+    const resp = await fetch(env.REACT_APP_BH + '/get-csrf');
     if(resp.status===200){
         const results = await resp.json()
         return results['csrfToken'];
