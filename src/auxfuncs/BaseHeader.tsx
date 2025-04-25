@@ -11,6 +11,7 @@ const BaseHeader = () => {
     const globalData = useContext(CompDataContext);
     const closeButtons = document.getElementsByClassName("addClose");
     const [isLoggingOut, SetIsLoggingOut] = useState(false);
+    
 
     const offCanvasCloseButton = document.getElementsByClassName("btn-close")[0]
     Array.from(closeButtons).forEach((item) => { item.addEventListener("click", function () { offCanvasCloseButton.click() }) });

@@ -79,6 +79,7 @@ const Profile = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        console.log(document.cookie);
         (async function () {
             let resp = await fetch(env.REACT_APP_BH + '/profile',
                 {
@@ -88,6 +89,7 @@ const Profile = () => {
                     }
                 }
             );
+            console.log(resp.status);
             if (resp.status === 200) {
                 const results = await resp.json();
                 console.log(results);
@@ -102,7 +104,7 @@ const Profile = () => {
             }
 
         })();
-    }, [navigate]);
+    }, []);
 
     return (
         <>

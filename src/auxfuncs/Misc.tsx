@@ -4,6 +4,7 @@ export const GetCSRF = async () =>{
     const resp = await fetch(env.REACT_APP_BH + '/get-csrf');
     if(resp.status===200){
         const results = await resp.json()
+        console.log(results);
         return results['csrfToken'];
     }
     else{
