@@ -14,7 +14,7 @@ function ViewCatalouge() {
       <div className="CatWrapper">
         <h1 className="CatLink">
           <Link to="/catalouge" className="CatLink">
-            {env.HSH}
+            {env.REACT_APP_HSH}
           </Link>
 
         </h1>
