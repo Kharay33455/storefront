@@ -1,44 +1,53 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import Activity from "../auxfuncs/Activity.tsx";
 import { useNavigate } from "react-router";
 import env from "react-dotenv";
 import { AddCommaToNum } from "../auxfuncs/Misc.tsx";
+import { CompDataContext } from '../App.tsx';
 
-const ProceedToPay = (checkout, navigate) =>{
-    try{
+const ProceedToPay = (checkout, navigate, globalData) => {
+    
+    
+    try {
+        
         const form = checkout.current;
-        const checkField = Array.from(form).find((item)=>{
+        const checkField = Array.from(form).find((item) => {
             return item.name === "selectedShipping" && item.checked;
         });
+        globalData.start();
+        globalData.SetPercent(40)
         const _tfid = checkField.value;
 
-        (async function(){
-            const resp = await fetch(env.REACT_APP_BH + "/payment/" + _tfid, 
+        (async function () {
+            const resp = await fetch(env.REACT_APP_BH + "/payment/" + _tfid,
                 {
-                    method : "GET",
-                    headers :{
-                        "Authorization" : "Token " + document.cookie.split("=")[1],
-                        "Content-Type" : "application/json"
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Token " + document.cookie.split("=")[1],
+                        "Content-Type": "application/json"
                     }
                 }
             );
             const results = await resp.json();
-            if(resp.status === 200){
+            if (resp.status === 200) {
                 navigate("/payment/" + results['order_id']);
-                return;
+                
             }
-            else if(resp.status === 301) {
+            else if (resp.status === 301) {
                 navigate(results['path']);
-                return;
+                
             }
-            else{
+            else {
                 alert("Unexpected error has occured.");
             }
         })();
     }
-    catch(error){
-        alert("Invalid Shipping Details")
+    catch (error) {
+
+        alert("Invalid Shipping Details. Create or select a valid address.");
+        globalData.clean();
     }
+    return;
 };
 
 const Summary = ({ param }) => {
@@ -96,12 +105,12 @@ const Summary = ({ param }) => {
             </div>
 
             <hr />
-            <div class="CenterHorizontally">
-                <p style={{ textAlign: 'center' }} className="btn btn-success" onClick={()=> 
-                    ProceedToPay(param.checkout, param.navigate)
-                }>
+            <div className="CenterHorizontally">
+                <div style={{ textAlign: 'center' }} className="btn btn-success" onClick={() => {
+                    ProceedToPay(param.checkout, param.navigate, param.globalData);
+                }}>
                     Complete Purchase
-                </p>
+                </div>
             </div>
         </>
     )
@@ -111,6 +120,7 @@ const Shipping = ({ param }) => {
     const SubmitShippingAddress = () => {
         (async function () {
             const form = new FormData(param.newShipment.current);
+            param.globalData.SetPercent(40);
 
             try {
                 const resp = await fetch(env.REACT_APP_BH + '/create-shipping/create/',
@@ -135,12 +145,14 @@ const Shipping = ({ param }) => {
             catch (error) {
                 console.log(error);
             }
+            param.globalData.clean();
         })();
     }
 
     const DeleteShippingAddress = (_id) => {
+        param.globalData.SetPercent(40);
         (async function () {
-            let resp = await fetch(env.REACT_APP_BH + '/create-shipping/delete/',
+            const resp = await fetch(env.REACT_APP_BH + '/create-shipping/delete/',
                 {
                     method: "POST",
                     headers: {
@@ -162,6 +174,7 @@ const Shipping = ({ param }) => {
             else {
                 alert("Unexpected error has occured.")
             }
+            param.globalData.clean();
         })();
     }
 
@@ -184,59 +197,60 @@ const Shipping = ({ param }) => {
                         :
                         <div>
                             <form ref={param.checkout}>
-                            {
-                                                        param.CData.shipping.map((item, index) =>
-                                                            <div key={index}>
-                                                                <div style={{ display: 'grid', gridTemplateColumns: '85% 15%' }}>
-                                                                    <div className="AddressCont">
-                                                                        <div>
-                                                                            <span className="AddressCountry">
-                                                                                {item['country']}
-                                                                            </span>
-                                                                            <hr />
-                                                                            <span className="AddressOther">
-                                                                                {item['street']}
-                                                                            </span>
-                                                                            <br />
-                                                                            <span className="AddressOther">
-                                                                                {item['street2']}
-                                                                            </span>
-                                                                            <br />
-                                                                            <span className="AddressOther">
-                                                                                {item['city']}
-                                                                            </span> <hr/>
-                                                                            <span className="AddressOther">
-                                                                                {item['state']}
-                                                                            </span>
-                                                                            <br />
-                                                                            <br />
-                                                                            <span className="AddressOther">
-                                                                                {item['mobile']}
-                                                                            </span>
-                                                                        </div>
-                                
-                                                                        <div className="CenterVertically CenterHorizontally" onClick={() => {
-                                                                            DeleteShippingAddress(item['id']);
-                                                                        }}>
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" className="bi bi-trash-fill" viewBox="0 0 16 16">
-                                                                                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
-                                                                            </svg>
-                                                                        </div>
-                                
-                                                                    </div>
-                                                                    <div className="CenterHorizontally CenterVertically">
-                                                                            <input id={"input" + item['id']} type="radio" name="selectedShipping" value={item['id']} />
-                                                                    </div>
-                                                                </div>
-                                                                <hr />
-                                                            </div>
-                                
-                                                        )}
+                                {
+                                    param.CData.shipping.map((item, index) =>
+                                        <div key={index}>
+                                            <div style={{ display: 'grid', gridTemplateColumns: '85% 15%' }}>
+                                                <div className="AddressCont">
+                                                    <div>
+                                                        <span className="AddressCountry">
+                                                            {item['country']}
+                                                        </span>
+                                                        <hr />
+                                                        <span className="AddressOther">
+                                                            {item['street']}
+                                                        </span>
+                                                        <br />
+                                                        <span className="AddressOther">
+                                                            {item['street2']}
+                                                        </span>
+                                                        <br />
+                                                        <span className="AddressOther">
+                                                            {item['city']}
+                                                        </span> <hr />
+                                                        <span className="AddressOther">
+                                                            {item['state']}
+                                                        </span>
+                                                        <br />
+                                                        <br />
+                                                        <span className="AddressOther">
+                                                            {item['mobile']}
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="CenterVertically CenterHorizontally" onClick={() => {
+                                                        param.globalData.start();
+                                                        DeleteShippingAddress(item['id']);
+                                                    }}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" className="bi bi-trash-fill" viewBox="0 0 16 16">
+                                                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
+                                                        </svg>
+                                                    </div>
+
+                                                </div>
+                                                <div className="CenterHorizontally CenterVertically">
+                                                    <input id={"input" + item['id']} type="radio" name="selectedShipping" value={item['id']} />
+                                                </div>
+                                            </div>
+                                            <hr />
+                                        </div>
+
+                                    )}
                             </form>
 
                         </div>
-                        
-                        }
+
+            }
             <form ref={param.newShipment}>
                 <hr />
                 <div className="AddressCountry">
@@ -290,6 +304,7 @@ const Shipping = ({ param }) => {
                 </div>
                 <br />
                 <button type="submit" className="btn btn-info" onClick={(e) => {
+                    param.globalData.start();
                     e.preventDefault();
                     SubmitShippingAddress();
                 }}>
@@ -306,10 +321,10 @@ const BodyBox = ({ param }) => {
         <>
             <div className="SideBySideResponsive">
                 <div>
-                    <Shipping param={{ 'CData': param.CData, 'newShipment': param.newShipment, 'SetCData': param.SetCData, 'checkout' : param.checkout }} />
+                    <Shipping param={{ 'CData': param.CData, 'newShipment': param.newShipment, 'SetCData': param.SetCData, 'checkout': param.checkout, 'globalData': param.globalData }} />
                 </div>
                 <div>
-                    <Summary param={{ 'CData': param.CData , 'checkout' : param.checkout, 'navigate' : param.navigate}} />
+                    <Summary param={{ 'CData': param.CData, 'checkout': param.checkout, 'navigate': param.navigate, 'globalData': param.globalData }} />
                 </div>
             </div>
 
@@ -322,10 +337,12 @@ const Checkout = () => {
     const navigate = useNavigate();
     const newShipment = useRef(null);
     const checkout = useRef(null);
+    const globalData = useContext(CompDataContext)
 
-    useState(() => {
+    useEffect(() => {
+        globalData.start();
         (async function () {
-
+            globalData.SetPercent(40);
             try {
 
                 const resp = await fetch(env.REACT_APP_BH + '/checkout',
@@ -337,6 +354,7 @@ const Checkout = () => {
                     }
                 );
                 const results = await resp.json();
+
                 if (resp.status === 200) {
                     SetCData(results);
                 }
@@ -346,6 +364,7 @@ const Checkout = () => {
                 else {
                     alert(results['err']);
                 }
+                globalData.clean();
             }
             catch (error) {
                 console.log(error);
@@ -353,7 +372,7 @@ const Checkout = () => {
             }
         })();
 
-    }, [CData])
+    }, [])
     return (
         <>
             <div className="Subhead">
@@ -367,7 +386,7 @@ const Checkout = () => {
             {
                 CData === null ? <Activity /> :
                     <>
-                        <BodyBox param={{ 'CData': CData, 'newShipment': newShipment, 'SetCData': SetCData, 'checkout' : checkout, 'navigate' : navigate}}/>
+                        <BodyBox param={{ 'CData': CData, 'newShipment': newShipment, 'SetCData': SetCData, 'checkout': checkout, 'navigate': navigate, 'globalData': globalData }} />
                     </>
             }
 

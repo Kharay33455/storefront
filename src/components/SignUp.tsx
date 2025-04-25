@@ -3,13 +3,17 @@ import env from "react-dotenv";
 import { useRef, useContext, useEffect, useState } from "react";
 import { CompDataContext } from "../App.tsx";
 
-const getOtp = (SetVerP) => {
-    SetVerP("Sending...");
+const getOtp = (SetVerP, ver) => {
+    if (ver) {
+        return;
+    }
+    SetVerP(true);
     (async function () {
         const email = document.getElementById("exampleInputEmail1").value;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             alert("invalid email format.");
+            SetVerP(false);
             return;
         }
 
@@ -29,7 +33,7 @@ const getOtp = (SetVerP) => {
                         },
                         body: JSON.stringify({ "email": email })
                     }
-                    
+
                 );
                 if (resp.status === 200) {
                     const results = await resp.json();
@@ -41,13 +45,12 @@ const getOtp = (SetVerP) => {
 
                     window.emailjs.send('service_ocw5r35', 'template_xk2l9re', vars).then(
                         (response) => {
-                            if(response.status === 200)
-                            {
+                            if (response.status === 200) {
                                 alert("Your verification OTP has been sent to " + email);
                             }
-                            else{
-                                alert("An unexpected error has occured. Try again later."); 
-                                SetVerP("Get Verification Code");
+                            else {
+                                alert("An unexpected error has occured. Try again later.");
+
                             }
                         },
                         (error) => {
@@ -55,31 +58,32 @@ const getOtp = (SetVerP) => {
                         },
                     );
 
-                    return;
                 }
-                else if(resp.status === 403){
-                    alert("A user with " + email +" already exists. Sign in instead.")
-                    SetVerP("Get Verification Code");
-                    return;
+                else if (resp.status === 403) {
+                    alert("A user with " + email + " already exists. Sign in instead.")
                 }
-                else if(resp.status === 400)
-                {
+                else if (resp.status === 400) {
                     let results = await resp.json();
                     alert("You cannot request another verification code for " + results['time'] + " seconds.");
-                    SetVerP("Get Verification Code");
-                    return;
+
                 }
-                else{
+                else {
                     alert("An enexpected error has occured.");
-                    SetVerP("Get Verification Code");
-                    return;
+
                 }
 
+                SetVerP(false);
+                return;
+
             }
+            SetVerP(false);
+            return;
 
         }
         catch {
             alert("Failed to send otp");
+            SetVerP(false);
+            return;
         };
 
     })();
@@ -88,13 +92,18 @@ const SignUp = () => {
 
     const globalData = useContext(CompDataContext);
     const navigate = useNavigate();
-    const [ver, SetVer] = useState("Get Verification Code")
+    const [ver, SetVer] = useState(false);
+    const [submitting, SetS] = useState(false);
 
     const emailScript = document.createElement('script');
 
     const SFormBox = useRef(null);
 
     const SubmitForm = async (e) => {
+        if(submitting){
+            return;
+        }
+        SetS(true);
         e.preventDefault();
         const cResp = await fetch(env.REACT_APP_BH + '/get-csrf');
         if (cResp.status === 200) {
@@ -125,9 +134,10 @@ const SignUp = () => {
             else {
                 alert(regRes['err']);
             }
+            SetS(false);
         }
+        SetS(false);
     }
-
 
     useEffect(() => {
         try {
@@ -136,10 +146,10 @@ const SignUp = () => {
             emailScript.onload = () => {
                 if (window.emailjs) {
                     window.emailjs.init("mX3uzinYKB0E6XdFJ");
-                    console.log("EmailJS initialized");
+                    
                 }
                 else {
-                    console.log("didnt intialize js");
+                    
                 }
             }
             document.body.appendChild(emailScript);
@@ -208,9 +218,21 @@ const SignUp = () => {
                                         required />
                                 </div>
 
-                                <div style={{ position: "absolute", bottom: "0", right: "0" }} onClick={()=> getOtp(SetVer)}>
+                                <div style={{ position: "absolute", bottom: "0", right: "0" }} onClick={() => getOtp(SetVer, ver)}>
                                     <span className="btn btn-info">
-                                        {ver}
+                                        {
+                                            !ver
+                                                ?
+
+                                                <span className="CatLink">
+                                                    Get verification code.
+                                                </span>
+                                                :
+
+                                                <div class="spinner-border text-light" role="status">
+                                                    <span class="sr-only"></span>
+                                                </div>
+                                        }
                                     </span>
                                 </div>
                             </div>
@@ -218,7 +240,16 @@ const SignUp = () => {
                                 <input type="checkbox" className="form-check-input" id="exampleCheck1" required />
                                 <label className="form-check-label" for="exampleCheck1">Agree to our terms and conditions</label>
                             </div>
-                            <button type="submit" className="btn btn-primary" onClick={SubmitForm}>Submit</button>
+                            <button type="submit" className="btn btn-primary" onClick={SubmitForm}>
+                                {
+                                    submitting ?
+                                        <div class="spinner-border text-light" role="status">
+                                            <span class="sr-only"></span>
+                                        </div>
+                                        :
+                                        "Submit"
+                                }
+                            </button>
                         </form>
 
                     </div>

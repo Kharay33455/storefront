@@ -1,6 +1,7 @@
 import {Link} from "react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import env from "react-dotenv";
+import{CompDataContext} from '../App.tsx';
 
 
 const CatHeader = () => {
@@ -42,6 +43,8 @@ const BodyGrid = ({ param }) => {
 const Catalouge = () => {
     const [loading, SetLoading] = useState(true);
     const [catData, SetCatData] = useState(null);
+    const globalData = useContext(CompDataContext);
+    
 
     const BodyData = async () => {
         const response = await fetch(env.REACT_APP_BH + "/categories");
@@ -49,10 +52,13 @@ const Catalouge = () => {
             const results = await response.json();
             SetCatData(results);
             SetLoading(false);
+            globalData.clean();
         }
     }
 
     useEffect(() => {
+        globalData.start();
+        globalData.SetPercent(50);
         BodyData();
     }, []);
 

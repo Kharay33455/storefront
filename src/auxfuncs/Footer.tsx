@@ -16,10 +16,10 @@ const Footer = () => {
 
                 <ul className="nav col-md-4 justify-content-end">
                     <li className="nav-item"><Link path="/" className="nav-link px-2 text-body-secondary">Home</Link></li>
-                    <li className="nav-item"><Link path="/" className="nav-link px-2 text-body-secondary">Features</Link></li>
-                    <li className="nav-item"><Link path="/" className="nav-link px-2 text-body-secondary">Pricing</Link></li>
-                    <li className="nav-item"><Link path="/" className="nav-link px-2 text-body-secondary">FAQs</Link></li>
-                    <li className="nav-item"><Link path="/" className="nav-link px-2 text-body-secondary">About</Link></li>
+                    <li className="nav-item"><Link path="/" className="nav-link px-2 text-body-secondary">Catalouge</Link></li>
+                    <li className="nav-item"><Link path="/" className="nav-link px-2 text-body-secondary">Profile</Link></li>
+                    <li className="nav-item"><Link path="/" className="nav-link px-2 text-body-secondary">FAQ</Link></li>
+                    <li className="nav-item"><Link path="/" className="nav-link px-2 text-body-secondary">Terms and conditions</Link></li>
                 </ul>
             </footer>
         </>

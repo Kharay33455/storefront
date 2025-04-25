@@ -14,7 +14,7 @@ function ViewCatalouge() {
       <div className="CatWrapper">
         <h1 className="CatLink">
           <Link to="/catalouge" className="CatLink">
-            VIEW CATALOUGE
+            {env.HSH}
           </Link>
 
         </h1>
@@ -27,15 +27,21 @@ export const SingleProduct = ({ param }) => {
   const item = param['item'];
   const index = param['index'];
   const render = param['render'];
+  const clean = useContext(CompDataContext)['clean'];
   const SetCartCount = useContext(CompDataContext)['SetCartCount'];
+  const SetPercent = useContext(CompDataContext)['SetPercent'];
+  const start = useContext(CompDataContext)['start'];
   const navigate = useNavigate();
 
   return (
     <>
       <div key={index} className={render === 'CAT' ? "ProductCard CenterHorizontally" : "CenterHorizontally"}>
-        <Link to={"/product/" + item['slug']} className="CatLinkBlack">
+        <div  className="CatLinkBlack" onClick={()=>{
+          start();
+          navigate("/product/"+item['slug'])
+        }}>
           <img src={env.REACT_APP_BH + item['picture1']} alt={item['name']} className={"SingleIndexProd" + render} />
-        </Link>
+        </div>
         <hr />
         {
           render === 'CAT' &&
@@ -45,7 +51,12 @@ export const SingleProduct = ({ param }) => {
                 <p className="centerText Price" >$&nbsp;{AddCommaToNum(item['price'])}</p>
               </div>
 
-              <div className="AddToCartWrapper CenterVertically CenterHorizontally" onClick={() => AddToCart(item['id'], SetCartCount, navigate, -99)}>
+              <div className="AddToCartWrapper CenterVertically CenterHorizontally" onClick={
+                () => {
+                  start();
+                  AddToCart(item['id'], SetCartCount, navigate, -99, SetPercent, clean);
+                }}
+                >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" className="bi bi-cart-plus-fill" viewBox="0 0 16 16">
                   <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0M9 5.5V7h1.5a.5.5 0 0 1 0 1H9v1.5a.5.5 0 0 1-1 0V8H6.5a.5.5 0 0 1 0-1H8V5.5a.5.5 0 0 1 1 0" />
                 </svg>
@@ -92,8 +103,13 @@ const Categories = ({ param }) => {
 const LoadedData = () => {
   const [indexData, SetIndexData] = useState(null);
   const [isLoading, SetIsLoading] = useState(true);
-
+  const clean = useContext(CompDataContext)['clean'];
+  const SetPercent = useContext(CompDataContext)['SetPercent'];
+  const start = useContext(CompDataContext)['start'];
+  
   const fetchData = async () => {
+    start();
+    SetPercent(60);
     const cookie = "Token " + document.cookie.split("=")[1];
     const response = await fetch(env.REACT_APP_BH,
       {
@@ -103,17 +119,20 @@ const LoadedData = () => {
         }
       }
     );
+
     if (response.status === 200) {
       const result = await response.json();
       SetIndexData(result);
       SetIsLoading(false);
     }
     else {
-      return null;
+      alert("An Unexpected error has occured.");
     }
+    clean();
   }
 
   useEffect(() => {
+    SetPercent(60);
     fetchData();
   }, []);
 
@@ -168,6 +187,7 @@ const ShopAbout = () => {
 }
 
 function App() {
+
 
   return (
 

@@ -1,26 +1,39 @@
 import { useParams} from "react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import env from "react-dotenv";
 import { SingleProduct } from "./Index.tsx";
+import {CompDataContext} from '../App.tsx';
 
 const SingleCat = () => {
     const { catSlug } = useParams();
     const [catData, SetCatData] = useState(null);
     const [loading, SetLoading] = useState(true);
+    
+    const globalData = useContext(CompDataContext);
 
+    const data = globalData;
+    const catS = catSlug; 
+    const clean = globalData['clean'];
     useEffect(() => {
         const fetchCatData = async () => {
-            const response = await fetch(env.REACT_APP_BH + "/categories/" + catSlug);
+            const response = await fetch(env.REACT_APP_BH + "/categories/" + catS);
             if (response.status === 200) {
                 const results = await response.json();
                 SetCatData(results);
                 SetLoading(false);
-                return
             }
+            if(data){
+            data.clean()
+        };
+
             return;
         }
+        data.start();
+        data.SetPercent(40);
+        
+        
         fetchCatData();
-    }, [catSlug])
+    }, [catS]);
     return (
         <>
             { !loading &&

@@ -1,8 +1,8 @@
 import { Link, useNavigate } from "react-router";
 import { useEffect, useRef, useState, useContext } from "react";
-import {validator} from "./Auth.tsx";
+import { validator } from "./Auth.tsx";
 import env from "react-dotenv";
-import {CompDataContext} from "../App.tsx";
+import { CompDataContext } from "../App.tsx";
 
 
 const SignIn = () => {
@@ -13,55 +13,58 @@ const SignIn = () => {
     const passwordBox = useRef(null);
     const formBox = useRef(null);
     const [csrf, SetCSRF] = useState(null);
-    
+    const [submitting, SetSubmitting] = useState(false);
 
-    const submitForm = async ()=>{
+
+    const submitForm = async () => {
         // validate
+        if(submitting){
+            return;
+        }
+        SetSubmitting(true);
         const isUserValid = validator(usernameBox.current.value);
-        console.log(isUserValid);
         const isPasswordValid = validator(passwordBox.current.value)
-        console.log(isPasswordValid);
-        if(isUserValid && isPasswordValid)
-        {
+        if (isUserValid && isPasswordValid) {
             const form = new FormData(formBox.current);
-            const response = await fetch(env.REACT_APP_BH + "/login/", 
+            const response = await fetch(env.REACT_APP_BH + "/login/",
                 {
-                    method : "POST",
-                    headers : {
+                    method: "POST",
+                    headers: {
 
-                        "X-CSRFToken" : csrf
+                        "X-CSRFToken": csrf
                     },
-                    body : form
+                    body: form
                 }
             )
             const results = await response.json();
-            if (response.status === 200){
+            if (response.status === 200) {
                 const sessionID = results['sessionID'];
                 const date = new Date();
-                date.setTime(date.getTime() + 2500000000); 
-                const cookie = "name="+sessionID+"; expires="+date.toUTCString()+"; path=/";
+                date.setTime(date.getTime() + 2500000000);
+                const cookie = "name=" + sessionID + "; expires=" + date.toUTCString() + "; path=/";
                 document.cookie = cookie;
                 const SetUser = globalData['SetUser'];
                 SetUser(results['user']);
                 navigate("/");
                 window.location.reload();
             }
-            else{
+            else {
                 alert(results['err']);
             }
+            SetSubmitting(false);
         }
+        SetSubmitting(false);
     };
 
-    useEffect(()=>{
-        (async function(){
-            const resp = await fetch(env.REACT_APP_BH+"/get-csrf");
-            if(resp.status===200)
-            {
+    useEffect(() => {
+        (async function () {
+            const resp = await fetch(env.REACT_APP_BH + "/get-csrf");
+            if (resp.status === 200) {
                 const results = await resp.json();
                 SetCSRF(results["csrfToken"])
-                
+
             }
-            else{
+            else {
                 return "No-TOKEN"
             }
         })();
@@ -82,7 +85,11 @@ const SignIn = () => {
                         <input ref={passwordBox} type="password" className="form-control" id="password" name="password1" required placeholder="Enter secure Password" />
                     </div>
                     <br />
-                    <p className="btn btn-primary" onClick={submitForm} ref={SubmitButton}>Submit</p>
+                    <div className="btn btn-primary" onClick={submitForm} ref={SubmitButton}>
+                        {submitting ? <div className="spinner-border text-light CenterVerically" role="status" style={{ width: '1.5rem', height: '1.5rem' }}>
+                            <span className="sr-only"></span>
+                        </div> : "Submit"}
+                    </div>
                     <br />
                     <span>
                         Don't have an account?

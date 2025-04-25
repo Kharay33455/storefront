@@ -37,7 +37,10 @@ const Details = ({ param }) => {
     return (
         <>
             <hr />
-            <div className="btn btn-outline-info CenterHorizontally" onClick={()=> AddToCart(product['id'], SetCartCount, navigate, -99)}>
+            <div className="btn btn-outline-info CenterHorizontally" onClick={()=>{ 
+                param.start();
+                AddToCart(product['id'], SetCartCount, navigate, -99, param["SetPercent"], param["clean"])
+                }}>
                 <div>
                     ADD TO CART
                 </div>
@@ -115,17 +118,24 @@ const SingleProd = () => {
     const SetCartCount = useContext(CompDataContext)['SetCartCount'];
     const navigate = useNavigate();
 
+    const globalData = useContext(CompDataContext);
+
 
 
     useEffect(() => {
+        globalData.SetPercent(60);
         (async () => {
+            
             const response = await fetch(env.REACT_APP_BH + "/product/" + params['prodSlug']);
             if (response.status === 200) {
                 const results = await response.json();
                 SetPD(results);
                 console.log(results)
                 SetIsLoading(false);
+                
             }
+            globalData.SetPercent(100);
+            globalData.clean();
         })();
 
         (async () => {
@@ -134,13 +144,12 @@ const SingleProd = () => {
                 const results = await response.json();
                 SetED(results);
                 SetLED(false);
-                console.log(results)
             }
 
         })();
 
 
-    }, [params])
+    }, [params.prodSlug])
     return (
         <>
             {isLoading ?
@@ -151,7 +160,7 @@ const SingleProd = () => {
                 :
                 <>
                     <ProdImages param={{ 'picture1': prodData['product']['picture1'], 'picture2': prodData['product']['picture2'] }} />
-                    <Details param={{ 'prod': prodData['product'], 'SetCartCount' : SetCartCount, 'navigate' : navigate }} />
+                    <Details param={{ 'prod': prodData['product'], 'SetCartCount' : SetCartCount, 'navigate' : navigate, 'SetPercent' : globalData.SetPercent, 'clean': globalData.clean, 'start':globalData.start }} />
                     {!loadingED && <More param={{ 'item': extraData['more'] }} />}
                     
 

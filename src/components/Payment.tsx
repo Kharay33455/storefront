@@ -1,8 +1,9 @@
 import { useParams } from "react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Activity from "../auxfuncs/Activity.tsx";
 import env from "react-dotenv";
 import {AddCommaToNum} from "../auxfuncs/Misc.tsx";
+import {CompDataContext} from '../App.tsx';
 
 const Status = ({param})=>{
     console.log(param)
@@ -17,7 +18,11 @@ const Status = ({param})=>{
     )
 }
 
-const ProcessPayment = (_SetHasPaid, _transID)=>{
+const ProcessPayment = (_SetHasPaid, _transID, globalData)=>{
+    
+    const clean = globalData['clean'];
+    
+    
     (async function(){
         let resp = await fetch(env.REACT_APP_BH + "/has-paid/" + _transID + '/',
             {
@@ -30,13 +35,16 @@ const ProcessPayment = (_SetHasPaid, _transID)=>{
         if(resp.status === 200)
         {
             _SetHasPaid(true);
-            return;
+            
         }
         else{
             alert("An unexpected error has occured.");
-            return;
+            
         }
+        clean();
     })();
+    
+    return;
 };
 const Payment = () => {
 
@@ -46,9 +54,11 @@ const Payment = () => {
     const [hasPaid, SetHasPaid] = useState(false);
     const [amount, SetAmount] = useState(null);
     const [wasSuccessful, SetWasSuccessful] = useState(null);
+    const globalData = useContext(CompDataContext);
 
     useEffect(() => {
         (async function () {
+            globalData.SetPercent(50);
             let resp = await fetch(env.REACT_APP_BH + "/has-paid/" + params.transID + '/',
                 {
                     method: "GET",
@@ -85,6 +95,7 @@ const Payment = () => {
             }
             console.log(resp.status);
         })();
+        globalData.clean();
     }, [params.transID]);
 
     return (
@@ -124,7 +135,9 @@ const Payment = () => {
 
                 !hasPaid ?
                     <div className="CenterVertically" onClick={() => {
-                        ProcessPayment(SetHasPaid, params.transID);
+                        ProcessPayment(SetHasPaid, params.transID, globalData);
+                        globalData.start();
+                        globalData.SetPercent(50);
                     }}>
                         <p className="btn btn-primary">
                             I have sent the money

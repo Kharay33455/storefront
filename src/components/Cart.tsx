@@ -34,6 +34,7 @@ const Total = ({ param }) => {
 }
 const Table = ({ param }) => {
     const params = param;
+    const globalData = useContext(CompDataContext);
     return (
         <table className="table table-hover">
             <thead>
@@ -71,8 +72,9 @@ const Table = ({ param }) => {
                                     <input className="form form-control" id={"quantity" + index} placeholder={item['quantity']}/>
                                 </div>
                                 <div className="CenterVertically CenterHorizontally btn btn-primary" onClick = {async ()=>{
+                                    globalData.start();
                                     const quantity = document.getElementById("quantity" + index).value;
-                                    AddToCart(item['id'], params['SetCartCount'], params['navigate'], quantity);
+                                    AddToCart(item['id'], params['SetCartCount'], params['navigate'], quantity, globalData.SetPercent, globalData.clean);
                                 }}>
                                     <span>
                                         <svg xmlns="http://www.w3.org/2000/svg" stroke="white" strokeWidth="2" width="16" height="16" fill="white" className="bi bi-check-lg" viewBox="0 0 16 16">
@@ -91,16 +93,17 @@ const Table = ({ param }) => {
 }
 
 const Cart = () => {
+    
     const [cartData, SetCartData] = useState(null);
     const navigate = useNavigate();
     const globalData = useContext(CompDataContext);
-    const CartCount = globalData['cartCount'];
     const SetCartCount = globalData['SetCartCount'];
     useEffect(() => {
+        
         (async function () {
             try {
 
-                const resp = await fetch(env.REACT_APP_BH + "/get-cart", {
+                const resp = await fetch(env.REACT_APP_BH + "/get-cart-data", {
                     method: "GET",
                     headers:
                     {
@@ -108,6 +111,9 @@ const Cart = () => {
                     }
                 });
                 const results = await resp.json();
+                console.log(resp.status);
+                console.log(results);
+                console.log(document.cookie);
                 if (resp.status === 200) {
                     SetCartData(results);
                 }
@@ -121,7 +127,7 @@ const Cart = () => {
 
         })();
 
-    }, [navigate, CartCount]);
+    }, [globalData.cartCount]);
 
     return (
         <div>

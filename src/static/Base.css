@@ -203,6 +203,9 @@ p {
     width: 100%;
     overflow-x: hidden;
 }
+.ShowLoading{
+    opacity : 1;
+}
 
 @media screen and (max-width:610px) {
     .BodyGridCont {
