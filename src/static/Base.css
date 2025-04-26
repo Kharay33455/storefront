@@ -2,22 +2,25 @@
     border: 1px ridge rgba(0, 0, 0, 0.2);
     box-shadow: 0vw 0vw 10px 2px gray;
     padding: 1vw;
-    border-radius:1vw;
-    display :grid;
-    grid-template-columns:85% 15%
+    border-radius: 1vw;
+    display: grid;
+    grid-template-columns: 85% 15%
 }
-.AddressCountry{
-    font-size:2em;
-    font-weight:500
+
+.AddressCountry {
+    font-size: 2em;
+    font-weight: 500
 }
-.AddressOther{
-    font-weight:500;
-    color:rgb(100,100,100);
+
+.AddressOther {
+    font-weight: 500;
+    color: rgb(100, 100, 100);
 }
-.bi-trash-fill{
-    fill:red !important;
-    width:4vw;
-    height:4vw
+
+.bi-trash-fill {
+    fill: red !important;
+    width: 4vw;
+    height: 4vw
 }
 
 .SignUpFormWrapper {
@@ -130,6 +133,15 @@ td {
     height: 24vw;
 }
 
+.LoadingImageA {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: rgba(150, 150, 150, 0.8);
+    opacity: 1
+}
+
 .centerText {
     text-align: center;
 }
@@ -203,8 +215,9 @@ p {
     width: 100%;
     overflow-x: hidden;
 }
-.ShowLoading{
-    opacity : 1;
+
+.ShowLoading {
+    opacity: 1;
 }
 
 @media screen and (max-width:610px) {
