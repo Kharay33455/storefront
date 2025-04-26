@@ -17,11 +17,11 @@ export const ProdImages = ({ param }) => {
             <div style={{marginTop : '10vh'}}>
                 <div className="SideBySide">
                     <div>
-                        <img src={env.REACT_APP_BH + image1} className="ProdImage" alt={image1} />
+                        <img src={env.REACT_APP_BH + image1} className="ProdImage" alt={image1} loading="lazy"/>
                     </div>
 
                     <div>
-                        <img src={env.REACT_APP_BH + image2} className="ProdImage" alt={image2} />
+                        <img src={env.REACT_APP_BH + image2} className="ProdImage" alt={image2} loading="lazy"/>
                     </div>
                 </div>
             </div>

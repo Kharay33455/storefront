@@ -22,6 +22,7 @@ const SignIn = () => {
             return;
         }
         SetSubmitting(true);
+        console.log(document.cookie);
         const isUserValid = validator(usernameBox.current.value);
         const isPasswordValid = validator(passwordBox.current.value)
         if (isUserValid && isPasswordValid) {
@@ -38,6 +39,7 @@ const SignIn = () => {
             )
             const results = await response.json();
             if (response.status === 200) {
+                
                 const sessionID = results['sessionID'];
                 const date = new Date();
                 date.setTime(date.getTime() + 2500000000);
@@ -46,6 +48,7 @@ const SignIn = () => {
                 const SetUser = globalData['SetUser'];
                 SetUser(results['user']);
                 navigate("/");
+                console.log(document.cookie);
                 window.location.reload();
             }
             else {
@@ -58,7 +61,7 @@ const SignIn = () => {
 
     useEffect(() => {
         (async function () {
-            const resp = await fetch(env.REACT_APP_BH + "/get-csrf");
+            const resp = await fetch(env.REACT_APP_BH + "/retrieve");
             if (resp.status === 200) {
                 const results = await resp.json();
                 SetCSRF(results["csrfToken"])

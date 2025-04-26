@@ -1,7 +1,8 @@
 import Activity from "../auxfuncs/Activity.tsx";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import env from "react-dotenv";
 import { Link, useNavigate } from "react-router";
+import {CompDataContext} from "../App.tsx";
 
 
 const OjectLoop = ({ param }) => {
@@ -75,12 +76,17 @@ const OrderDetails = ({ param }) => {
 
 const Profile = () => {
     const [profileData, SetPD] = useState(true);
+    const globalData = useContext(CompDataContext);
 
     const navigate = useNavigate();
 
     useEffect(() => {
         console.log(document.cookie);
         (async function () {
+            if(globalData.user === undefined){
+                navigate("/auth");
+                return;
+            }
             let resp = await fetch(env.REACT_APP_BH + '/profile',
                 {
                     method: "GET",
@@ -97,6 +103,7 @@ const Profile = () => {
                 return;
             }
             else if(resp.status === 301){
+                alert("An unexpected error has occured. Deleting your cookies might fix this issue.");
                 navigate("/auth");
             }
              else {
@@ -104,7 +111,9 @@ const Profile = () => {
             }
 
         })();
-    }, []);
+
+        return;
+    }, [globalData]);
 
     return (
         <>

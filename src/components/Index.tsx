@@ -40,7 +40,7 @@ export const SingleProduct = ({ param }) => {
           start();
           navigate("/product/"+item['slug'])
         }}>
-          <img src={env.REACT_APP_BH + item['picture1']} alt={item['name']} className={"SingleIndexProd" + render} />
+          <img src={env.REACT_APP_BH + item['picture1']} alt={item['name']} className={"SingleIndexProd" + render} loading="lazy"/>
         </div>
         <hr />
         {

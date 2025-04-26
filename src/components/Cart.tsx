@@ -103,7 +103,7 @@ const Cart = () => {
         (async function () {
             try {
 
-                const resp = await fetch(env.REACT_APP_BH + "/get-cart-data", {
+                let resp = await fetch(env.REACT_APP_BH + "/get-cart-data", {
                     method: "GET",
                     headers:
                     {
@@ -113,7 +113,6 @@ const Cart = () => {
                 const results = await resp.json();
                 console.log(resp.status);
                 console.log(results);
-                console.log(document.cookie);
                 if (resp.status === 200) {
                     SetCartData(results);
                 }

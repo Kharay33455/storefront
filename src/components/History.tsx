@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import env from "react-dotenv";
 import Activity from "../auxfuncs/Activity.tsx";
 import { AddCommaToNum } from '../auxfuncs/Misc.tsx';
 import { Link , useNavigate} from "react-router";
+import {CompDataContext} from "../App.tsx";
 
 const HistoryList = ({ param }) => {
     return (
@@ -64,9 +65,14 @@ const HistoryList = ({ param }) => {
 const History = () => {
     const [HData, SetHD] = useState(null);
     const navigate = useNavigate();
+    const globalData = useContext(CompDataContext);
 
     useEffect(() => {
         (async function () {
+            if(globalData.user === undefined ){
+                navigate("/auth");
+                return;
+            }
             const resp = await fetch(env.REACT_APP_BH + "/history",
                 {
                     method: "GET",
@@ -83,12 +89,14 @@ const History = () => {
             }
             else if(resp.status ===301)
             {
+                alert("An unexpected error has occured while trying to sign you in. Deleting your cookies might fix this issues.");
                 navigate("/auth");
             }
             else {
                 alert("An unexpected error has occured.");
             }
         })();
+        return;
 
     }, [navigate]);
     return (

@@ -19,7 +19,7 @@ const getOtp = (SetVerP, ver) => {
 
         try {
             // get csrf to send post form with
-            const csrfResp = await fetch(env.REACT_APP_BH + "/get-csrf");
+            const csrfResp = await fetch(env.REACT_APP_BH + "/retrieve");
             if (csrfResp.status === 200) {
                 const cResult = await csrfResp.json();
                 const csrf = cResult['csrfToken'];
@@ -105,7 +105,7 @@ const SignUp = () => {
         }
         SetS(true);
         e.preventDefault();
-        const cResp = await fetch(env.REACT_APP_BH + '/get-csrf');
+        const cResp = await fetch(env.REACT_APP_BH + '/retrieve');
         if (cResp.status === 200) {
             const res = await cResp.json();
             const csrf = res['csrfToken'];

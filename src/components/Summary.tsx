@@ -1,5 +1,6 @@
 import { useParams } from "react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import {CompDataContext} from "../App.tsx";
 import env from "react-dotenv";
 import Activity from "../auxfuncs/Activity.tsx";
 import { AddCommaToNum } from "../auxfuncs/Misc.tsx";
@@ -167,10 +168,16 @@ const Summary = () => {
     const params = useParams();
 
     const [SData, SetSData] = useState(null);
-    console.log(params);
+    
+    const globalData = useContext(CompDataContext);
 
     useEffect(() => {
         (async function () {
+            if(globalData.user === undefined)
+            {
+                alert("Your session has ezpired");
+                return;
+            }
             const resp = await fetch(env.REACT_APP_BH + "/summary/" + params.orderID,
                 {
                     method: "GET",
