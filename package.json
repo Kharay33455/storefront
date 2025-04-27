@@ -1,4 +1,5 @@
 {
+  "homepage": "https://artmarketplace.online",
   "name": "storefront",
   "version": "0.1.0",
   "private": true,
@@ -45,7 +46,9 @@
     "whitelist": [
       "REACT_APP_BH",
       "REACT_APP_HSH",
-      "REACT_APP_CN"
+      "REACT_APP_CN",
+      "REACT_APP_ATCB",
+      "REACT_APP_CCB"
     ]
   },
   "devDependencies": {

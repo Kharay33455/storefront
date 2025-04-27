@@ -36,6 +36,7 @@ export const SingleProduct = ({ param }) => {
   const index = param['index'];
   const render = param['render'];
   const clean = useContext(CompDataContext)['clean'];
+  const user = useContext(CompDataContext)['user'];
   const SetCartCount = useContext(CompDataContext)['SetCartCount'];
   const SetPercent = useContext(CompDataContext)['SetPercent'];
   const start = useContext(CompDataContext)['start'];
@@ -68,10 +69,10 @@ export const SingleProduct = ({ param }) => {
                 <p className="centerText Price" >$&nbsp;{AddCommaToNum(item['price'])}</p>
               </div>
 
-              <div className="AddToCartWrapper CenterVertically CenterHorizontally" onClick={
+              <div style={{backgroundColor : env.REACT_APP_ATCB}} className="AddToCartWrapper CenterVertically CenterHorizontally" onClick={
                 () => {
                   start();
-                  AddToCart(item['id'], SetCartCount, navigate, -99, SetPercent, clean);
+                  AddToCart(item['id'], SetCartCount, navigate, -99, SetPercent, clean, user);
                 }}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" className="bi bi-cart-plus-fill" viewBox="0 0 16 16">

@@ -74,7 +74,7 @@ const Table = ({ param }) => {
                                 <div className="CenterVertically CenterHorizontally btn btn-primary" onClick = {async ()=>{
                                     globalData.start();
                                     const quantity = document.getElementById("quantity" + index).value;
-                                    AddToCart(item['id'], params['SetCartCount'], params['navigate'], quantity, globalData.SetPercent, globalData.clean);
+                                    AddToCart(item['id'], params['SetCartCount'], params['navigate'], quantity, globalData.SetPercent, globalData.clean, globalData.user);
                                 }}>
                                     <span>
                                         <svg xmlns="http://www.w3.org/2000/svg" stroke="white" strokeWidth="2" width="16" height="16" fill="white" className="bi bi-check-lg" viewBox="0 0 16 16">

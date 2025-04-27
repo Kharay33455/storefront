@@ -58,7 +58,7 @@ const BaseHeader = () => {
                 <div className="container-fluid">
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <div>
-                            <Link className="navbar-brand Icon" style={{ color: 'white' }} to="/">{globalData['compData'] !== null && globalData['compData']['name']}</Link>
+                            <Link className="navbar-brand Icon" style={{ color: 'white' }} to="/">{env.REACT_APP_CN}</Link>
                         </div>
 
                         {
@@ -67,7 +67,7 @@ const BaseHeader = () => {
                             <Link to="/auth" className="CatLinkBlack">
                             <div style={{ position: 'relative', cursor: 'pointer' }}>
                                 <div style={{ position: 'absolute', top: '-1vh', right: '0' }}>
-                                    <span style={{ fontSize: '0.5em', fontWeight: '900', backgroundColor: '#0DCAF0', padding: '0 0.5vh', borderRadius: '100%' }}>
+                                    <span style={{ fontSize: '0.5em', fontWeight: '900', backgroundColor: env.REACT_APP_CCB, padding: '0 0.5vh', borderRadius: '100%' }}>
                                         {globalData['cartCount']}
                                     </span>
                                 </div>
@@ -103,7 +103,7 @@ const BaseHeader = () => {
                     </div>
 
                     <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-                        <svg xmlns="http://www.w3.org/2000/svg" strokeWidth="1.5" stroke="white" width="30" height="30" fill="currentColor" className="bi bi-list" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" strokeWidth="1.5" stroke={env.REACT_APP_CCB} width="30" height="30" fill="currentColor" className="bi bi-list" viewBox="0 0 16 16">
                             <path fillRule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
                         </svg>
                     </button>

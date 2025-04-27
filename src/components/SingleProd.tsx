@@ -33,13 +33,14 @@ const Details = ({ param }) => {
     const product = param['prod'];
     const SetCartCount = param['SetCartCount'];
     const navigate =  param['navigate'];
+    const user = useContext(CompDataContext)['user'];
 
     return (
         <>
             <hr />
             <div className="btn btn-outline-info CenterHorizontally" onClick={()=>{ 
                 param.start();
-                AddToCart(product['id'], SetCartCount, navigate, -99, param["SetPercent"], param["clean"])
+                AddToCart(product['id'], SetCartCount, navigate, -99, param["SetPercent"], param["clean"], user);
                 }}>
                 <div>
                     ADD TO CART

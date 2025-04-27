@@ -2,10 +2,12 @@ import { GetCSRF } from "../auxfuncs/Misc.tsx";
 import env from "react-dotenv";
 
 
-export const AddToCart = (itemID, SetCartCount, navigate, update, SetPercent, clean) => {
-
+export const AddToCart = (itemID, SetCartCount, navigate, update, SetPercent, clean, user) => {
     SetPercent(40);
     (async function () {
+        if(user === undefined){
+            navigate("/auth");
+        }
         const csrf = await GetCSRF();
         if (csrf) {
             SetPercent(70);
